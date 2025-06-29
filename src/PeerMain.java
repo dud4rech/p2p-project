@@ -6,7 +6,6 @@ public class PeerMain {
 
     public static void main(String[] args) throws IOException {
         int num = Integer.parseInt(args[0]);
-
         peer = new Peer(num, ip);
         peer.start();
     }

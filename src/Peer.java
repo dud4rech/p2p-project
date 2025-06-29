@@ -179,10 +179,10 @@ public class Peer {
         List<PeerInfo> availablePeers = activePeers.values().stream().toList();
         Random random = new Random();
         PeerInfo optimisticPeer = availablePeers.get(random.nextInt(availablePeers.size()));
-
         System.out.println("[optimistic] Selecionando peer aleatório: " + optimisticPeer.getId());
 
         String[] files = optimisticPeer.getFiles().split(";");
+
         StringBuilder arquivosBaixados = new StringBuilder();
 
         for (String fileName : files) {

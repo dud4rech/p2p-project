@@ -2,8 +2,8 @@ public class PeerInfo {
     private final String id;
     private final String ip;
     private final int port;
-    private long lastSeen = System.currentTimeMillis();
     private String files;
+    private long lastSeen = System.currentTimeMillis();
 
     public PeerInfo(String id, String ip, int port, String files) {
         this.id = id;

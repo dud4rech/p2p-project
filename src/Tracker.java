@@ -49,7 +49,6 @@ public class Tracker {
             int before = peers.size();
             peers.entrySet().removeIf(entry -> entry.getValue().isExpired());
             int after = peers.size();
-
             if (before != after) {
                 System.out.println("[cleaner] Peers expirados removidos. Total agora: " + after);
             }
