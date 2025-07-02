@@ -125,7 +125,7 @@ public class Peer {
             return;
         }
 
-        File localFile = new File("./pieces/" + id + "/" + rarestFile);
+        File localFile = new File("src/pieces/" + id + "/" + rarestFile);
         if (localFile.exists()) {
             System.out.println("[rarest first] Arquivo mais raro (" + rarestFile + ") já está presente. Ignorando.");
             return;
@@ -151,7 +151,7 @@ public class Peer {
                 out.write("REQUEST_RAREST:" + rarestFile + "\n");
                 out.flush();
 
-                File outputFile = new File("./pieces/" + id + "/" + rarestFile);
+                File outputFile = new File("src/pieces/" + id + "/" + rarestFile);
                 outputFile.getParentFile().mkdirs();
 
                 try (FileOutputStream fileOut = new FileOutputStream(outputFile)) {
@@ -188,7 +188,7 @@ public class Peer {
         for (String fileName : files) {
             if (fileName.isBlank()) continue;
 
-            File localFile = new File("./pieces/" + id + "/" + fileName);
+            File localFile = new File("src/pieces/" + id + "/" + fileName);
             if (localFile.exists()) continue;
 
             try (Socket socket = new Socket(optimisticPeer.getIp(), optimisticPeer.getPort());
@@ -199,7 +199,7 @@ public class Peer {
                 out.write("REQUEST_FILE:" + fileName + "\n");
                 out.flush();
 
-                File outputFile = new File("./pieces/" + id + "/" + fileName);
+                File outputFile = new File("src/pieces/" + id + "/" + fileName);
                 outputFile.getParentFile().mkdirs();
 
                 try (FileOutputStream fileOut = new FileOutputStream(outputFile)) {
@@ -228,7 +228,7 @@ public class Peer {
     }
 
     private String listFiles() {
-        File dir = new File("./pieces/" + id);
+        File dir = new File("src/pieces/" + id);
         File[] filesArr = dir.listFiles();
 
         StringBuilder filesList = new StringBuilder();
@@ -290,7 +290,7 @@ public class Peer {
     }
 
     private boolean hasLocalFile(String filename) {
-        File localFile = new File("./pieces/" + id + "/" + filename);
+        File localFile = new File("/" + id + "/" + filename);
         return localFile.exists();
     }
 
@@ -312,7 +312,7 @@ public class Peer {
 
             if (request.startsWith("REQUEST_RAREST")) {
                String fileName = request.split(":")[1];
-               File file = new File("./pieces/" + id + "/" + fileName);
+               File file = new File("src/pieces/" + id + "/" + fileName);
 
                if (file.exists()) {
                    byte[] buffer = new byte[4096];
