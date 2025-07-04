@@ -127,7 +127,6 @@ public class Peer {
 
         File localFile = new File("src/pieces/" + id + "/" + rarestFile);
         if (localFile.exists()) {
-            System.out.println("[rarest first] Arquivo mais raro (" + rarestFile + ") já está presente. Ignorando.");
             return;
         }
 
