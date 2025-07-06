@@ -119,7 +119,6 @@ public class Peer {
         }
 
         String rarestFile = findRarestFile();
-
         if (rarestFile == null || rarestFile.isEmpty()) {
             System.out.println("[rarest first] Nenhum arquivo raro encontrado.");
             return;
@@ -137,7 +136,6 @@ public class Peer {
         }
 
         this.lastRarestPeerId = fileOwner.getId();
-
         System.out.println("[rarest first] Solicitando o arquivo " + rarestFile + " ao " + fileOwner.getId());
 
         try (Socket socket = new Socket()) {
@@ -182,8 +180,6 @@ public class Peer {
 
         String[] files = optimisticPeer.getFiles().split(";");
 
-        StringBuilder arquivosBaixados = new StringBuilder();
-
         for (String fileName : files) {
             if (fileName.isBlank()) continue;
 
@@ -209,18 +205,14 @@ public class Peer {
                     }
                 }
 
-                arquivosBaixados.append(fileName).append(" ");
+                System.out.println("[optimistic] Arquivo baixado de " + optimisticPeer.getId() + ": " + fileName);
             } catch (ConnectException e) {
                 System.out.println("[optimistic] Erro ao conectar com " + optimisticPeer.getId() + ": " + e.getMessage());
             } catch (IOException e) {
                 System.out.println("[optimistic] Erro ao baixar " + fileName + " de " + optimisticPeer.getId() + ": " + e.getMessage());
             }
-        }
 
-        if (arquivosBaixados.length() > 0) {
-            System.out.println("[optimistic] Arquivos baixados de " + optimisticPeer.getId() + ": " + arquivosBaixados.toString());
-        } else {
-            System.out.println("[optimistic] Nenhum novo arquivo baixado de " + optimisticPeer.getId());
+            break;
         }
 
         lastRarestPeerId = null;
@@ -270,7 +262,7 @@ public class Peer {
 
             String[] files = peer.getFiles().split(";");
             for (String file : files) {
-
+                file = file.trim();
                 if (hasLocalFile(file)) continue;
 
                 fileFrequency.put(file, fileFrequency.getOrDefault(file, 0) + 1);
@@ -289,7 +281,7 @@ public class Peer {
     }
 
     private boolean hasLocalFile(String filename) {
-        File localFile = new File("/" + id + "/" + filename);
+        File localFile = new File("src/pieces/" + id + "/" + filename);
         return localFile.exists();
     }
 

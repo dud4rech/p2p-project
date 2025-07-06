@@ -1,25 +1,48 @@
-# BitTorrent Project in Java
+# Projeto BitTorrent em Java
 
-This project implements a simplified version of the BitTorrent protocol using Java, focusing on learning P2P (peer-to-peer) networking concepts, UDP/TCP communication, and file sharing in pieces.
+Este projeto implementa uma versão simplificada do protocolo BitTorrent utilizando Java, com foco no aprendizado de conceitos de redes **P2P (peer-to-peer)**, comunicação via **UDP/TCP** e **compartilhamento de arquivos em partes**.
 
-## 🔑 Key Features
+## 🔑 Funcionalidades Principais
 
-- ✅ Peer registration and updates with a central tracker via UDP  
-- 📦 File sharing divided into pieces among peers  
-- 🧠 “Rarest first” piece selection to optimize file distribution  
-- 🎲 Optimistic peer selection to encourage diversity in file exchange  
-- 🔗 TCP connections between peers for piece transfer  
-- 🆕 Support for peers joining without any files  
-- 🔁 Periodic updates of each peer’s available files  
+- ✅ Registro e atualização de peers com um tracker central via UDP  
+- 📦 Compartilhamento de arquivos divididos em partes entre os peers  
+- 🧠 Seleção de pedaços pelo algoritmo “rarest first” para otimizar a distribuição  
+- 🎲 Seleção otimista de peers para incentivar diversidade nas trocas  
+- 🔗 Conexões TCP entre peers para transferência de arquivos  
+- 🆕 Suporte para peers iniciando sem arquivos  
+- 🔁 Atualizações periódicas dos arquivos disponíveis de cada peer  
 
-## 🧱 Structure
+## 🧱 Estrutura do Projeto
 
-- **`Peer`**: Main class representing a peer, managing connections, local files, and scheduled tasks  
-- **`Tracker`**: Central server maintaining the list of active peers and their files  
-- **`PeerInfo`**: Helper class holding information about each peer  
+- `Peer`: Representa um peer, gerencia conexões, arquivos locais e tarefas agendadas  
+- `Tracker`: Servidor central que mantém a lista de peers ativos e seus arquivos  
+- `PeerInfo`: Classe auxiliar com informações de cada peer  
+- `PeerMain`: Classe com `main()` para iniciar um peer  
+- `TrackerMain`: Classe com `main()` para iniciar o tracker  
 
-## 🛠️ Technologies Used
+## 🛠️ Tecnologias Utilizadas
 
-- Java SE (UDP and TCP sockets)  
-- `ScheduledExecutorService` for periodic tasks  
-- Basic client-server architecture
+- Java SE (sockets UDP e TCP)  
+- `ScheduledExecutorService` para tarefas periódicas  
+- Arquitetura cliente-servidor básica  
+
+---
+
+## ▶️ Como compilar e executar (sem Maven)
+
+### 🔧 Todos os comandos de uma vez:
+
+```bash
+# Compilar o projeto (gera classes em /bin)
+javac -d bin src/*.java
+
+# Em um terminal separado, iniciar o tracker:
+java -cp bin TrackerMain
+
+# Em outro terminal, iniciar um peer com a pasta peer1:
+# Criar a pasta peer1 dentro da pasta pieces
+java -cp bin PeerMain 1
+
+# (opcional) para iniciar mais peers:
+java -cp bin PeerMain 2
+java -cp bin PeerMain 3
