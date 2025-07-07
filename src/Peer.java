@@ -125,7 +125,7 @@ public class Peer {
         }
 
         File localFile = new File("src/pieces/" + id + "/" + rarestFile);
-        if (localFile.exists()) {
+        if (hasLocalFile(localFile.getName())) {
             return;
         }
 
@@ -184,33 +184,36 @@ public class Peer {
             if (fileName.isBlank()) continue;
 
             File localFile = new File("src/pieces/" + id + "/" + fileName);
-            if (localFile.exists()) continue;
+            if (hasLocalFile(localFile.getName())) continue;
 
-            try (Socket socket = new Socket(optimisticPeer.getIp(), optimisticPeer.getPort());
-                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                InputStream input = socket.getInputStream()) {
+            try (Socket socket = new Socket()) {
+                socket.connect(new InetSocketAddress(optimisticPeer.getIp(), optimisticPeer.getPort()), 5000); // conecta ao peer que possui o arquivo raro
+                socket.setSoTimeout(10000);
 
-                out.write("REQUEST_FILE:" + fileName + "\n");
-                out.flush();
+                try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                    InputStream input = socket.getInputStream()) {
 
-                File outputFile = new File("src/pieces/" + id + "/" + fileName);
-                outputFile.getParentFile().mkdirs();
+                    out.write("REQUEST_FILE:" + fileName + "\n");
+                    out.flush();
 
-                try (FileOutputStream fileOut = new FileOutputStream(outputFile)) {
-                    byte[] buffer = new byte[4096];
-                    int bytesRead;
-                    while ((bytesRead = input.read(buffer)) != -1) {
-                        fileOut.write(buffer, 0, bytesRead);
+                    File outputFile = new File("src/pieces/" + id + "/" + fileName);
+                    outputFile.getParentFile().mkdirs();
+
+                    try (FileOutputStream fileOut = new FileOutputStream(outputFile)) {
+                        byte[] buffer = new byte[4096];
+                        int bytesRead;
+                        while ((bytesRead = input.read(buffer)) != -1) {
+                            fileOut.write(buffer, 0, bytesRead);
+                        }
                     }
-                }
 
-                System.out.println("[optimistic] Arquivo baixado de " + optimisticPeer.getId() + ": " + fileName);
+                    System.out.println("[optimistic] Arquivo baixado de " + optimisticPeer.getId() + ": " + fileName);
+                }
             } catch (ConnectException e) {
                 System.out.println("[optimistic] Erro ao conectar com " + optimisticPeer.getId() + ": " + e.getMessage());
             } catch (IOException e) {
-                System.out.println("[optimistic] Erro ao baixar " + fileName + " de " + optimisticPeer.getId() + ": " + e.getMessage());
-            }
+            System.out.println("[optimistic] Erro ao baixar " + fileName + " de " + optimisticPeer.getId() + ": " + e.getMessage());
+        }
 
             break;
         }
@@ -301,7 +304,7 @@ public class Peer {
 
             String request = in.readLine();
 
-            if (request.startsWith("REQUEST_RAREST")) {
+            if (request.startsWith("REQUEST_RAREST") || request.startsWith("REQUEST_FILE")) {
                String fileName = request.split(":")[1];
                File file = new File("src/pieces/" + id + "/" + fileName);
 
