@@ -101,9 +101,8 @@ public class Tracker {
         }
 
         String updatedList = buildActivePeerInfo();
-        byte[] data = updatedList.getBytes();
-        DatagramPacket response = new DatagramPacket(data, data.length, packet.getAddress(), packet.getPort());
-        datagramSocket.send(response);
+
+        sendResponseToPeer(packet, updatedList);
     }
 
     private void sendResponseToPeer(DatagramPacket packet, String message) throws IOException {

@@ -71,7 +71,7 @@ public class Peer {
     }
 
     private void connectToTracker() {
-        try {
+        try {         
             String message = "CONNECT:" + id + ":" + port + ":" + listFiles();
             byte[] data = message.getBytes();
             DatagramPacket request = new DatagramPacket(
@@ -187,7 +187,7 @@ public class Peer {
             if (hasLocalFile(localFile.getName())) continue;
 
             try (Socket socket = new Socket()) {
-                socket.connect(new InetSocketAddress(optimisticPeer.getIp(), optimisticPeer.getPort()), 5000); // conecta ao peer que possui o arquivo raro
+                socket.connect(new InetSocketAddress(optimisticPeer.getIp(), optimisticPeer.getPort()), 5000);
                 socket.setSoTimeout(10000);
 
                 try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
